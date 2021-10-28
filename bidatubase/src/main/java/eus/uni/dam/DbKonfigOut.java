@@ -14,10 +14,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import eus.uni.dam.out.FilmDao;
+
 @Configuration
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
-public class DatuBasearenKonfigurazioa {
+public class DbKonfigOut {
 
     /**
      * Definición del DataSource para la conexión a nuestra base de datos.
@@ -25,23 +27,14 @@ public class DatuBasearenKonfigurazioa {
      * asignadas usando el objeto env.
      *
      */
-    @Bean("dataSourceIn")
-    public DataSource dataSourceIn() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("dbin.driver"));
-        dataSource.setUrl(env.getProperty("dbin.url"));
-        dataSource.setUsername(env.getProperty("dbin.username"));
-        dataSource.setPassword(env.getProperty("dbin.password"));
-        return dataSource;
-    }
 
-    @Bean("dataSourceOut")
+    @Bean
     public DataSource dataSourceOut() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("db.driver"));
-        dataSource.setUrl(env.getProperty("db.url"));
-        dataSource.setUsername(env.getProperty("db.username"));
-        dataSource.setPassword(env.getProperty("db.password"));
+        dataSource.setDriverClassName(env.getProperty("dbout.driver"));
+        dataSource.setUrl(env.getProperty("dbout.url"));
+        dataSource.setUsername(env.getProperty("dbout.username"));
+        dataSource.setPassword(env.getProperty("dbout.password"));
         return dataSource;
     }
     
@@ -49,15 +42,15 @@ public class DatuBasearenKonfigurazioa {
      *
      * Declaración del EntityManagerFactory de JPA
      */
-    @Bean("factoryIn")
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 
         //Le asignamos el dataSource que acabamos de definir.
-        entityManagerFactory.setDataSource(dataSourceIn());
+        entityManagerFactory.setDataSource(dataSourceOut());
 
         // Le indicamos la ruta donde tiene que buscar las clases anotadas
-        entityManagerFactory.setPackagesToScan(env.getProperty("entitymanagerin.packagesToScan"));
+        entityManagerFactory.setPackagesToScan(env.getProperty("entitymanagerout.packagesToScan"));
 
         // Implementación de JPA a usar: Hibernate
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -65,9 +58,9 @@ public class DatuBasearenKonfigurazioa {
 
         // Propiedades de Hibernate
         Properties additionalProperties = new Properties();
-        additionalProperties.put("hibernate.dialect", env.getProperty("hibernatein.dialect"));
-        additionalProperties.put("hibernate.show_sql", env.getProperty("hibernatein.show_sql"));
-        additionalProperties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernatein.hbm2ddl.auto"));
+        additionalProperties.put("hibernate.dialect", env.getProperty("hibernateout.dialect"));
+        additionalProperties.put("hibernate.show_sql", env.getProperty("hibernateout.show_sql"));
+        additionalProperties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernateout.hbm2ddl.auto"));
         entityManagerFactory.setJpaProperties(additionalProperties);
 
         return entityManagerFactory;
@@ -95,8 +88,8 @@ public class DatuBasearenKonfigurazioa {
     }
 
     @Bean
-    public PeliculaDao getPeliculaDao() {
-    	return new PeliculaDao();
+    public FilmDao getFilmDao() {
+    	return new FilmDao();
     }
     
     

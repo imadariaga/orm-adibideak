@@ -1,4 +1,4 @@
-package eus.uni.dam;
+package eus.uni.dam.in;
 
 import java.util.List;
 import java.util.Objects;
