@@ -18,14 +18,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource("classpath:/application.properties")  
 @EnableTransactionManagement
-public class DatuBasearenKonfigurazioa {
+public class DatuBasearenKonfigurazioa0 {
 
-	@Bean
-	Pelicula pelicula() {
-		
-		return new Pelicula();
-	}
-	
     /**
      * Definición del DataSource para la conexión a nuestra base de datos.
      * Las propiedades son establecidas desde el fichero de properties, y
@@ -54,7 +48,7 @@ public class DatuBasearenKonfigurazioa {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 
         //Le asignamos el dataSource que acabamos de definir.
-        entityManagerFactory.setDataSource(dataSource());
+        entityManagerFactory.setDataSource(dataSource);
 
         // Le indicamos la ruta donde tiene que buscar las clases anotadas
         entityManagerFactory.setPackagesToScan(env.getProperty("entitymanager.packagesToScan"));
@@ -79,7 +73,7 @@ public class DatuBasearenKonfigurazioa {
     @Bean
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
         return transactionManager;
     }
 
@@ -102,12 +96,11 @@ public class DatuBasearenKonfigurazioa {
     @Autowired
     private Environment env;
 
-    
-//    @Autowired
-//    private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-//    @Autowired
-//    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
+    @Autowired
+    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
   
 }

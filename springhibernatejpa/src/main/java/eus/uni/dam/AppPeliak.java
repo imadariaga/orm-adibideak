@@ -14,33 +14,19 @@ public class AppPeliak {
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(DatuBasearenKonfigurazioa.class);
 
 		PeliculaDao peliDao = appContext.getBean(PeliculaDao.class);
-		/* edo horrela:
-		 * @Autowired
-		 * PeliculaDao peliDao;
-		 */		
-		
-		// Pelikulen taula sortu eta erregistro bat txertatu
-		Pelicula peli = new Pelicula(1, "El Estornino", "2020", null);
-		peliDao.create(peli);
-		System.out.println("Create egina: El Estornino. ");
 
-		
-		  //Pelikula bati data aldatu peli.setAnyo("2018"); peliDao.update(peli);
-		  System.out.println("Update egina: El Estornino-2018. ");
-		  
-		  //Bigarren Pelikula bat txertatu 
-		  peli = new Pelicula(2,"Galipolli","1990",null); 
-		  peliDao.create(peli);
-		  System.out.println("Txertatua: Galipolli. ");
-		  
-		  
-		  //Pelikulen taulako datuak berreskuratu 
-		  List<Pelicula> pelis = peliDao.getAll(); 
-		  for (Pelicula p:pelis) { System.out.println(p); }
-		  
-		  //borrau bat peliDao.delete(peliDao.getById(1));
-		  System.out.println("borrau da lehengoa?");
-		 
+		Pelicula peli2 = appContext.getBean(Pelicula.class);
+		peli2.setId(4);
+		peli2.setTitulo("AupaEtxebeste");
+		try {
+			peliDao.create(peli2);
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {//pakete honetan beste hainbat salbuespen interesgarri daude definituta
+			System.out.println("Ezin izan da erregistroa txertatu. id hori hartuta dago.");
+		}
+		List<Pelicula> pelis = peliDao.getAll();
+		for (Pelicula p : pelis) {
+			System.out.println(p);
+		}
 
 		((AnnotationConfigApplicationContext) appContext).close();
 
